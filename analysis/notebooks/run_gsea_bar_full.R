@@ -1,5 +1,5 @@
 # Make the gsea bar plot for all datasets
-source("./code/gsea_bar_full.R")
+source("../../scripts/code/gsea_bar_full.R")
 
 dataset_meta <- tribble(~name_regex,	~ species, ~mapping,
                         "EMTAB7320_v2",	"Mus musculus", "org.Mm.eg.db",
