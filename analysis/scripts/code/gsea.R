@@ -1,7 +1,5 @@
-library(EGSEA)
 library(topGO)
 library(org.Mm.eg.db)
-source("./code/utils.R")
 #' Avoid boilerplate in GSEA
 #' 
 #' This function converts the Ensembl gene IDs into Entrez IDs and then do GSEA
@@ -245,4 +243,15 @@ plot_qq <- function(topgo_res) {
     labs(x = expression(Expected~~-log[10](italic(p))), 
          y = expression(Observed~~-log[10](italic(p)))) +
     theme_classic()
+}
+
+
+methodDE <- function(seu1, seu2, ...) {
+  # Make cell names unique
+  seu1 <- RenameCells(seu1, add.cell.id = "a")
+  seu2 <- RenameCells(seu2, add.cell.id = "b")
+  seu <- merge(seu1, seu2)
+  Idents(seu) <- "orig.ident"
+  markers <- FindMarkers(seu, ident.1 = unique(as.character(seu1$orig.ident)), ...) %>% 
+    clean_markers()
 }

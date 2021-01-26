@@ -23,6 +23,21 @@ read_count_output <- function(dir, name, tcc = TRUE) {
   ge <- if (tcc) ".ec.txt" else ".genes.txt"
   genes <- fread(paste0(dir, "/", name, ge), header = FALSE)$V1
   barcodes <- fread(paste0(dir, "/", name, ".barcodes.txt"), header = FALSE)$V1
+  print(paste0(dir, "/", name, ".mtx"))
+  colnames(m) <- barcodes
+  rownames(m) <- genes
+  return(m)
+}
+
+read_count_output_salmon <- function(dir, name, tcc = TRUE) {
+  dir <- normalizePath(dir, mustWork = TRUE)
+  m <- readMM(paste0(dir, "/", name, ".mtx"))
+  m <- t(m)
+  m <- as(m, "dgCMatrix")
+  # The matrix read has cells in rows
+  ge <- "_cols.txt"
+  genes <- fread(paste0(dir, "/", name, ge), header = FALSE)$V1
+  barcodes <- fread(paste0(dir, "/", name, "_rows.txt"), header = FALSE)$V1
   colnames(m) <- barcodes
   rownames(m) <- genes
   return(m)

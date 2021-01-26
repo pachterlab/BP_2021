@@ -1,0 +1,3 @@
+This directory contains files with Ensembl gene ID, gene symbol, description,
+and Entrez gene ID, that can be read into R as a data frame. These are from
+Ensembl version 93, for all species in the benchmark datasets here.

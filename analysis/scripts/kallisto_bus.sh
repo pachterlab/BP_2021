@@ -71,6 +71,21 @@ $(paste -d" " \
   <(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R1) \
   <(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R2))
   
+echo ""
+echo '[bustools] sorting bus file for whitelist generation..'
+
+bustools sort \
+-t 10 \
+-m 4G \
+-o $OUTDIR/sorted.bus \
+   $OUTDIR/output.bus
+echo ""
+echo '[bustools] generating whitelist..'
+
+/usr/bin/time --output $OUTDIR/whitelist.log -v \
+bustools whitelist \
+-o $OUTDIR/whitelist.txt \
+   $OUTDIR/sorted.bus
 
 echo ""
 echo '[bustools] correcting barcodes..'
@@ -87,7 +102,7 @@ echo '[bustools] sorting bus file..'
 /usr/bin/time --output $OUTDIR/sort.log -v \
 bustools sort \
 -t 10 \
--m 8G \
+-m 4G \
 -o $OUTDIR/sc.bus \
    $OUTDIR/c.bus
    
@@ -104,5 +119,14 @@ bustools count \
 -e $OUTDIR/matrix.ec \
 -t $OUTDIR/transcripts.txt \
    $OUTDIR/sc.bus
-   
+
+
+echo ""
+echo "[bustools] converting to text.."
+
+/usr/bin/time --output $OUTDIR/text.log -v \
+bustools text \
+-p $OUTDIR/output.bus \
+> /dev/null
+
 echo "Done."

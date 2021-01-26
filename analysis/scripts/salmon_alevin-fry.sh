@@ -85,6 +85,18 @@ alevin-fry generate-permit-list \
 -i $OUTDIR \
 -o $GEN \
 -b $WHITELIST
+
+echo ""
+echo '[alevin-fry] generating whitelist..'
+
+WL="$OUTDIR/whitelist"
+
+/usr/bin/time --output $OUTDIR/whitelist.log -v \
+alevin-fry generate-permit-list \
+-d either \
+-i $OUTDIR \
+-o $WL \
+--knee-distance
    
 echo ""
 echo '[alevin-fry] sorting rad file..'
@@ -109,5 +121,13 @@ alevin-fry quant \
 -o $QNT \
 -m $T2G \
 -t 10
-   
+
+echo ""
+echo "[alevin-fry] converting to text"
+/usr/bin/time --output $OUTDIR/text.log -v \
+alevin-fry view \
+--rad $OUTDIR/map.rad \
+--header \
+> /dev/null
+
 echo "Done."

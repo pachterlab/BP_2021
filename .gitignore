@@ -18,3 +18,8 @@ data/
 *.bed
 *.fai
 *.out
+.Rproj.user
+archive/
+*.pkl
+*.h5ad
+*.bak

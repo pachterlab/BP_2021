@@ -3,7 +3,7 @@ library(tidyverse)
 library(DropletUtils)
 library(Matrix)
 library(Seurat)
-code_files <- paste0("../scripts/code/", c("find_clust_mirror", "gsea", "plot_comparison",
+code_files <- paste0("../scripts/code/", c("find_clust_mirror", "gsea",
                                   "read_count_output", "utils"), ".R")
 walk(code_files, source)
 
@@ -37,14 +37,14 @@ gsea_bar_full <- function(species, name_regex, mapping,
   # Read in kallisto matrix
   mats$kallisto <- read_count_output(get_dir(name_regex, 
                                              "../../data/kallisto_out"),
-                                     "count", tcc = FALSE)
+                                     "count/output", tcc = FALSE)
   # Filter barcodes
   bc_rank <- barcodeRanks(mats$kallisto, lower = min_cells)
   mats$kallisto <- mats$kallisto[, Matrix::colSums(mats$kallisto) > 
                                    metadata(bc_rank)$inflection]
   # Read in filtered CellRanger matrix
-  mats$cellranger <- read_count_output(get_dir(name_regex, "../../data/alevin_out"),
-                                            "/quant/alevin", tcc=FALSE)
+  mats$cellranger <- read_count_output_salmon(get_dir(name_regex, "../../data/alevin_out"),
+                                            "/quant/alevin/quants_mat", tcc=FALSE)
   # colnames(mats$cellranger) <- colnames(mats$cellranger) %>% str_remove("-1")
   # Only keep genes that are detected
   mats <- map(mats, ~ .x[Matrix::rowSums(.x) > 0, ])
@@ -124,45 +124,11 @@ gsea_bar_full <- function(species, name_regex, mapping,
     mutate(change = cut(avg_logFC, -20:20),
            dataset = name_use)
   # Save the data frame for bar plot
-  write_csv(out, paste0("../data/gsea_bar/", name_use, ".csv"))
-  write_csv(method_markers, paste0("../data/method_de/", name_use, ".csv"))
-  if (nrow(out) == 0) {
-    p <- ggplot(out) +
-      annotate("text", x = 1, y = 1, label = "No significant gene set") +
-      theme_void()
-  } else if (length(unique(out$GO.ID)) == 1) {
-    # Plot histogram if there's one gene set
-    p <- ggplot(out, aes(avg_logFC)) +
-      geom_histogram(bins = 10) +
-      theme_bw() +
-      labs(x = paste(unique(out$Term), "avg logFC"))
-  } else {
-    max_abs <- abs(out$avg_logFC[which.max(abs(out$avg_logFC))])
-    p <- ggplot(out, aes(fct_reorder(Term, Term, length, .desc = FALSE), 
-                         fill = fct_rev(change))) +
-      geom_bar() +
-      scale_fill_viridis_d(option = "E", name = "logFC", direction = -1,
-                           begin = 1 - abs(min(out$avg_logFC))/max_abs,
-                           end = abs(max(out$avg_logFC))/max_abs) +
-      scale_y_continuous(expand = expand_scale(mult = c(0, 0.05))) +
-      theme_bw() +
-      #theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
-      labs(y = "Number of genes", x = "gene set") +
-      coord_flip()
-  }
-  p <- p + ggtitle(paste(name_use, paste(species, collapse = ", ")))
-  ggsave(paste0("../../data/gsea_bar/", name_use, ".png"), 
-         p, device = "png", width = 9, height = 6)
+  print('Writing')
+  write_csv(out, paste0("../../data/gsea_bar/", name_use, ".csv"))
+  write_csv(method_markers, paste0("../../data/method_de/", name_use, ".csv"))
   
   # Save the QQ plot data frame
   write_csv(method_gsea, paste0("../../data/gsea_qq/", name_use, ".csv"))
   # qq plot
-  p <- plot_qq(method_gsea) +
-    ggtitle(paste(name_use, paste(species, collapse = ", ")))
-  if (length(mapping) > 1L) {
-    p <- p +
-      facet_wrap(~ mapping)
-  }
-  ggsave(paste0("../../data/gsea_qq/", name_use, ".png"), 
-         p, device = "png", width = 9, height = 6)
 }
