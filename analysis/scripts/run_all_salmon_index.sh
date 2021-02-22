@@ -18,4 +18,8 @@ for species in 'arabidopsis-tair10' 'fly-dm6' 'human-grch38' 'human_mouse-hg19_m
     mkdir -p $outdir/salmon
     cmd="bash $SCRIPTDIR/mkref_salmon.sh -o $outdir/salmon  -g $genome -a $gtf -t $transcriptome -m $t2g"
     echo $cmd
+
+    mkdir -p $outdir/salmon_transcriptome
+    cmd="bash $SCRIPTDIR/mkref_salmon_transcriptome.sh -o $outdir/salmon_transcriptome -t $transcriptome"
+    echo $cmd
 done
