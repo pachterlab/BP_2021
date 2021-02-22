@@ -1,0 +1,6 @@
+{
+        "sample":"heart1k_v3",
+	"species":"mouse",
+	"technology":"v3",
+    "ref": "mm10"
+}

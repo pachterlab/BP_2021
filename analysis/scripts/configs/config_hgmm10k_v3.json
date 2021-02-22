@@ -1,0 +1,6 @@
+{
+        "sample":"hgmm10k_v3",
+	"species":"human_mouse",
+	"technology":"v3",
+    "ref": "hg19_mm10"
+}
