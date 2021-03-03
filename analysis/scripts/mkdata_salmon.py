@@ -143,13 +143,14 @@ def main(ds, out_dir, k_path, a_path):
     c = c.bcs.apply(lambda x: x.split('-')[0]).values
     
     # load whitelists
-    kb_wl_file = os.path.join(k_path, f"{ds}/whitelist.txt")
+    kb_wl_file = os.path.join(k_path, f"{ds}/whitelist/permit_freq.tsv")
     al_wl_file = os.path.join(a_path, f"{ds}/whitelist/permit_freq.tsv")
     
-    k = nd(pd.read_csv(kb_wl_file, header=None).values)
+    k = nd(pd.read_csv(al_wl_file, header=None, sep="\t", names = ['bcs', 'cnt'])['bcs'].values)
     a = nd(pd.read_csv(al_wl_file, header=None, sep="\t", names = ['bcs', 'cnt'])['bcs'].values)
     
     cr_barcodes = np.intersect1d(np.intersect1d(k, a), c)
+    print(f"Number of cellranger barcodes: {cr_barcodes.shape}")
     
     
     # load alevin data
@@ -175,11 +176,12 @@ def main(ds, out_dir, k_path, a_path):
     t = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     print(f"[{t}] load kb mtx")
     
-    kb_path = os.path.join(k_path, f"{ds}/count/")
+    kb_path = os.path.join(k_path, f"{ds}/quant/alevin/")
+    
     kb_raw = import_matrix_as_anndata(
-        barcodes_path=os.path.join(kb_path, "output.barcodes.txt"), 
-        genes_path=   os.path.join(kb_path, "output.genes.txt"), 
-        matrix_path=  os.path.join(kb_path, "output.mtx"))
+        barcodes_path=os.path.join(kb_path, "quants_mat_rows.txt"), 
+        genes_path=os.path.join(kb_path, "quants_mat_cols.txt"), 
+        matrix_path=os.path.join(kb_path, "quants_mat.mtx"))
     
     # basic process
     t = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')

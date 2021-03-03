@@ -252,6 +252,6 @@ methodDE <- function(seu1, seu2, ...) {
   seu2 <- RenameCells(seu2, add.cell.id = "b")
   seu <- merge(seu1, seu2)
   Idents(seu) <- "orig.ident"
-  markers <- FindMarkers(seu, ident.1 = unique(as.character(seu1$orig.ident)), ...) %>% 
+  markers <- FindMarkers(seu, ident.1 = unique(as.character(seu1$orig.ident)),logfc.threshold=0.01, ...) %>% 
     clean_markers()
 }

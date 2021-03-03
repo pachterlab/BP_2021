@@ -13,7 +13,7 @@ SCRIPTDIR=$(jq -r '.script_dir' ${CONFIG})
 V2WL=$(jq -r '.v2_whitelist' ${CONFIG})
 V3WL=$(jq -r '.v3_whitelist' ${CONFIG})
 
-mkdir -p $OUTDIR/kallisto_out
+# mkdir -p $OUTDIR/kallisto_out
 
 for config in $CONFDIR/*; do
     ref=$(jq -r '.ref' ${config})
@@ -33,10 +33,10 @@ for config in $CONFDIR/*; do
         WL=$V3WL
     fi
 
-    outdir=$OUTDIR/plotting_kb_saf-decoy/$species-$sample
+    outdir=$OUTDIR/plotting_saf_saf-decoy/$species-$sample
     mkdir -p $outdir
 
-    cmd="$SCRIPTDIR/mkdata.py -k $OUTDIR/kallisto_out -s $OUTDIR/alevin_out -d $species-$sample -o $outdir"
+    cmd="$SCRIPTDIR/mkdata_salmon.py -k $OUTDIR/alevin_out_transcriptome -s $OUTDIR/alevin_out -d $species-$sample -o $outdir"
 
     echo $cmd
     eval $cmd

@@ -1,9 +1,9 @@
 {
-	"reads_dir":"/home/sina/projects/fry/BP_2021/data/fastqs",
-        "ref_dir":"/home/sina/projects/fry/BP_2021/reference",
-        "out_dir":"/home/sina/projects/fry/BP_2021/data",
-        "config_dir":"/home/sina/projects/fry/BP_2021/analysis/scripts/configs",
-        "script_dir":"/home/sina/projects/fry/BP_2021/analysis/scripts",
-        "v2_whitelist": "/home/sina/projects/fry/BP_2021/reference/whitelist_10xv2.txt",
-        "v3_whitelist": "/home/sina/projects/fry/BP_2021/reference/whitelist_10xv3.txt"
+	"reads_dir":"/home/sina/projects/fry/test/BP_2021/data/fastqs",
+        "ref_dir":"/home/sina/projects/fry/test/BP_2021/reference",
+        "out_dir":"/home/sina/projects/fry/test/BP_2021/data",
+        "config_dir":"/home/sina/projects/fry/test/BP_2021/analysis/scripts/configs",
+        "script_dir":"/home/sina/projects/fry/test/BP_2021/analysis/scripts",
+        "v2_whitelist": "/home/sina/projects/fry/test/BP_2021/reference/whitelist_10xv2.txt",
+        "v3_whitelist": "/home/sina/projects/fry/test/BP_2021/reference/whitelist_10xv3.txt"
 }

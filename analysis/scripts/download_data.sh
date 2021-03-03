@@ -88,9 +88,9 @@ bamtofastq Inf_rep1_possorted_genome_bam.bam.1 reads
 #mv the fastq.gz files to a directory called: "../../data/fastqs/mouse-SRR6998058_v2"
 mkdir ../../data/fastqs/mouse-SRR6998058_v2
 cd reads/Inf_Rep1_aggregate_counts_MissingLibrary_1_HYY5NBCXY/
-rename bamtofastq bamtofastq1 *
+rename.ul bamtofastq bamtofastq1 *
 cd ../Inf_Rep1_aggregate_counts_MissingLibrary_1_H2VNNBCX2/
-rename bamtofastq bamtofastq2 *
+rename.ul bamtofastq bamtofastq2 *
 cd ../../
 mv reads/*/*.fastq.gz ../../data/fastqs/mouse-SRR6998058_v2
 rm reads -r
@@ -113,9 +113,9 @@ bamtofastq 10xWT6S_possorted_genome_bam.bam.1 reads
 #mv the fastq.gz files to a directory called: "../../data/fastqs/zebrafish-SRR6956073_v2"
 mkdir ../../data/fastqs/zebrafish-SRR6956073_v2
 cd reads/ZF6S_WT_10X1_MissingLibrary_1_HMMNFBGX3/
-rename bamtofastq bamtofastq1 *
+rename.ul bamtofastq bamtofastq1 *
 cd ../ZF6S_WT_10X1_MissingLibrary_1_HN5JGBGX3/
-rename bamtofastq bamtofastq2 *
+rename.ul bamtofastq bamtofastq2 *
 cd ../../
 mv reads/*/*.fastq.gz ../../data/fastqs/zebrafish-SRR6956073_v2
 rm reads -r
@@ -154,8 +154,8 @@ rm KS_10x_iPSC_KS1_K1_1.bam.1
 #SRR8611943
 wget  https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos3/sra-pub-run-21/SRR8611943/SRR8611943.1
 fastq-dump --split-files ./SRR8611943.1
-rename 1.fastq R1.fastq *
-rename 2.fastq R2.fastq *
+rename.ul 1.fastq R1.fastq *
+rename.ul 2.fastq R2.fastq *
 #mv the fastq.gz files to a directory called: "../../data/fastqs/worm-SRR8611943_v2"
 mkdir ../../data/fastqs/worm-SRR8611943_v2
 gzip *.fastq
@@ -166,8 +166,8 @@ rm ./SRR8611943.1
 #https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR8639063
 wget  https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos3/sra-pub-run-20/SRR8639063/SRR8639063.1
 fastq-dump --split-files ./SRR8639063.1
-rename 1.fastq R1.fastq *
-rename 2.fastq R2.fastq *
+rename.ul 1.fastq R1.fastq *
+rename.ul 2.fastq R2.fastq *
 #mv the fastq.gz files to a directory called: "../../data/fastqs/mouse-SRR8639063_v2"
 mkdir ../../data/fastqs/mouse-SRR8639063_v2
 gzip *.fastq
@@ -178,8 +178,8 @@ rm ./SRR8639063.1
 #https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR8257100
 wget  https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-run-1/SRR8257100/SRR8257100.1
 fastq-dump --split-files ./SRR8257100.1
-rename 1.fastq R1.fastq *
-rename 2.fastq R2.fastq *
+rename.ul 1.fastq R1.fastq *
+rename.ul 2.fastq R2.fastq *
 #mv the fastq.gz files to a directory called: "../../data/fastqs/arabidopsis-SRR8257100_v2"
 mkdir ../../data/fastqs/arabidopsis-SRR8257100_v2
 gzip *.fastq
@@ -190,8 +190,8 @@ rm ./SRR8257100.1
 #https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR8513910
 wget  https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos3/sra-pub-run-19/SRR8513910/SRR8513910.1
 fastq-dump --split-files ./SRR8513910.1
-rename 2.fastq R1.fastq *
-rename 3.fastq R2.fastq *
+rename.ul 2.fastq R1.fastq *
+rename.ul 3.fastq R2.fastq *
 #mv the fastq.gz files to a directory called: "../../data/fastqs/fly-SRR8513910_v2"
 mkdir ../../data/fastqs/fly-SRR8513910_v2
 gzip *.fastq
@@ -200,8 +200,8 @@ rm ./SRR8513910.1
 
 #SRR8599150_v2
 fastq-dump --split-files SRR8599150
-rename 1.fastq R1.fastq *
-rename 2.fastq R2.fastq *
+rename.ul 1.fastq R1.fastq *
+rename.ul 2.fastq R2.fastq *
 #mv the fastq.gz files to a directory called: "../../data/fastqs/mouse-SRR8599150_v2"
 mkdir ../../data/fastqs/mouse-SRR8599150_v2
 gzip *.fastq

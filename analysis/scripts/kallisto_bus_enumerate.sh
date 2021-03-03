@@ -5,10 +5,10 @@ usage () {
     
     Options:
     -o, --output            output folder
-    -i, --index             pseudoalignment index directory
+    -i, --index             pseudoalignment index
     -w, --whitelist         10x barcode whitelist
     -g, --genemap           transcripts to genes map
-    -x, --technology        single-cell tech 'chromium' or 'chromiumV3'
+    -x, --technology        single-cell tech
     -f, --fastqdir          folder containing fastqs
     "
     exit 1
@@ -59,75 +59,75 @@ fi
 mkdir -p $OUTDIR
 
 echo ""
-echo '[salmon] pseudoaligning reads..'
+echo '[kallisto] pseudoaligning reads..'
 
 /usr/bin/time --output $OUTDIR/pseudoalignment.log -v \
-salmon alevin \
--l ISR \
+kallisto bus \
+-n \
 -i $INDEX \
--1 $(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R1) \
--2 $(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R2) \
---tgMap $T2G \
 -o $OUTDIR \
---rad \
--p 10 \
---$TECH # Tech goes here
+-x $TECH \
+-t 10 \
+$(paste -d" " \
+  <(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R1) \
+  <(ls $FASTQDIR | awk -v p=$FASTQDIR '{print p$0}' | grep R2))
   
-
 echo ""
-echo '[alevin-fry] correcting barcodes..'
+echo '[bustools] sorting bus file for whitelist generation..'
 
-GEN="$OUTDIR/generate"
-
-/usr/bin/time --output $OUTDIR/correct.log -v \
-alevin-fry generate-permit-list \
--d either \
--i $OUTDIR \
--o $GEN \
--b $WHITELIST
-
+bustools sort \
+-t 10 \
+-m 4G \
+-o $OUTDIR/sorted.bus \
+   $OUTDIR/output.bus
 echo ""
-echo '[alevin-fry] generating whitelist..'
-
-WL="$OUTDIR/whitelist"
+echo '[bustools] generating whitelist..'
 
 /usr/bin/time --output $OUTDIR/whitelist.log -v \
-alevin-fry_wl generate-permit-list \
--d either \
--i $OUTDIR \
--o $WL \
---knee-distance
+bustools whitelist \
+-o $OUTDIR/whitelist.txt \
+   $OUTDIR/sorted.bus
+
+echo ""
+echo '[bustools] correcting barcodes..'
+
+/usr/bin/time --output $OUTDIR/correct.log -v \
+bustools correct \
+-w $WHITELIST \
+-o $OUTDIR/c.bus \
+   $OUTDIR/output.bus
    
 echo ""
-echo '[alevin-fry] sorting rad file..'
-
+echo '[bustools] sorting bus file..'
 
 /usr/bin/time --output $OUTDIR/sort.log -v \
-alevin-fry collate \
--i $GEN \
--r $OUTDIR \
--t 10
+bustools sort \
+-t 10 \
+-m 4G \
+-o $OUTDIR/sc.bus \
+   $OUTDIR/c.bus
    
 echo ""
-echo '[alevin-fry] counting umis..'
+echo '[bustools] counting umis..'
 
-
-QNT="$OUTDIR/quant"
+mkdir -p $OUTDIR/count
 
 /usr/bin/time --output $OUTDIR/count.log -v \
-alevin-fry quant \
---use-mtx \
--i $GEN \
--o $QNT \
--m $T2G \
--t 10
+bustools count \
+--genecounts \
+-g $T2G \
+-o $OUTDIR/count/ \
+-e $OUTDIR/matrix.ec \
+-t $OUTDIR/transcripts.txt \
+   $OUTDIR/sc.bus
+
 
 echo ""
-echo "[alevin-fry] converting to text"
+echo "[bustools] converting to text.."
+
 /usr/bin/time --output $OUTDIR/text.log -v \
-alevin-fry view \
---rad $OUTDIR/map.rad \
---header \
+bustools text \
+-p $OUTDIR/output.bus \
 > /dev/null
 
 echo "Done."

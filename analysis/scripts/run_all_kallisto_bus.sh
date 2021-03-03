@@ -23,7 +23,7 @@ for config in $CONFDIR/*; do
     
     kb_index="$REFDIR/$species-$ref/kallisto/index.idx"
     t2g="$REFDIR/$species-$ref/ref/t2g.txt"
-    fastqs="$READSDIR/$species-$sample"
+    fastqs="$READSDIR/$species-$sample/"
 
     TECH="10xv2"
     WL=$V2WL

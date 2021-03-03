@@ -59,6 +59,8 @@ grep "^>" <(cat $GENOME) | cut -d " " -f 1 > $OUTDIR/decoys.txt
 sed -i.bak -e 's/>//g' $OUTDIR/decoys.txt
 cat $TRANSCRIPTOME $GENOME > $OUTDIR/gentrome.fa
 
+mkdir -p $OUTDIR/salmon_index
+
 echo "[salmon] building decoy index"
 /usr/bin/time --output $OUTDIR/index.log -v \
 salmon index -i $OUTDIR/salmon_index \

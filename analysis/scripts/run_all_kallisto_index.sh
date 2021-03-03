@@ -13,4 +13,5 @@ for species in 'arabidopsis-tair10' 'fly-dm6' 'human-grch38' 'human_mouse-hg19_m
     mkdir -p $outdir/kallisto
     cmd="bash $SCRIPTDIR/mkref_kallisto.sh -o $outdir/kallisto -t $outdir/ref/transcriptome.fa"
     echo $cmd
+    eval $cmd
 done

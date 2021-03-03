@@ -13,7 +13,8 @@ SCRIPTDIR=$(jq -r '.script_dir' ${CONFIG})
 V2WL=$(jq -r '.v2_whitelist' ${CONFIG})
 V3WL=$(jq -r '.v3_whitelist' ${CONFIG})
 
-mkdir -p $OUTDIR/kallisto_out
+mkdir -p $OUTDIR/alevin_out
+mkdir -p $OUTDIR/alevin_out_transcriptome
 
 for config in $CONFDIR/*; do
     ref=$(jq -r '.ref' ${config})
@@ -21,9 +22,7 @@ for config in $CONFDIR/*; do
     tech=$(jq -r '.technology' ${config})
     species=$(jq -r '.species' ${config})
     
-    index="$REFDIR/$species-$ref/salmon"
-    t2g="$REFDIR/$species-$ref/salmon/decoy_t2g.txt"
-    fastqs="$READSDIR/$species-$sample"
+    fastqs="$READSDIR/$species-$sample/"
 
     TECH="chromium"
     WL=$V2WL
@@ -33,18 +32,22 @@ for config in $CONFDIR/*; do
         WL=$V3WL
     fi
 
-    mkdir -p $OUTDIR/alevin_out/$species-$sample
-
-    cmd="bash $SCRIPTDIR/salmon_alevin-fry.sh -o $OUTDIR/alevin_out/$species-$sample/ -i $index -w $WL -g $t2g -x $TECH -f $fastqs"
-
-    echo $cmd
-    
-    index="$REFDIR/$species-$ref/salmon_transcriptome"
-    t2g="$REFDIR/$species-$ref/ref/t2g.txt"
+    index="$REFDIR/$species-$ref/salmon_transcriptome/salmon_index"
+    t2g="$REFDIR/$species-$ref/ref/salmon_t2g.txt"
     mkdir -p $OUTDIR/alevin_out_transcriptome/$species-$sample
 
     cmd="bash $SCRIPTDIR/salmon_alevin-fry.sh -o $OUTDIR/alevin_out_transcriptome/$species-$sample/ -i $index -w $WL -g $t2g -x $TECH -f $fastqs"
 
     echo $cmd
-    # eval $cmd
+    eval $cmd
+    
+    index="$REFDIR/$species-$ref/salmon/salmon_index"
+    t2g="$REFDIR/$species-$ref/salmon/decoy_t2g.txt"
+    mkdir -p $OUTDIR/alevin_out/$species-$sample
+
+    cmd="bash $SCRIPTDIR/salmon_alevin-fry.sh -o $OUTDIR/alevin_out/$species-$sample/ -i $index -w $WL -g $t2g -x $TECH -f $fastqs"
+
+    echo $cmd
+    eval $cmd
+    
 done

@@ -97,7 +97,7 @@ def make_hist(A, B, orientation="vertical", ax=None):
 
     best_bins = min([A_bins,concat_bins,B_bins], key=len) # may need to change to max
     best_bins = concat_bins
-    ax.hist(A, bins=best_bins, orientation=orientation, color=kallisto_color, label="kallisto", alpha=1)
+    ax.hist(A, bins=best_bins, orientation=orientation, color=kallisto_color, label="alevin_transcriptome", alpha=1)
     ax.hist(B, bins=best_bins, orientation=orientation, color=alevin_color, label="alevin", alpha=1)
     return ax
 
@@ -109,7 +109,7 @@ def make_scatter_hist(dist_AA, dist_BB, dist_AB, dist_BA, ax=None):
     yy = dist_BB
 
     # the scatter plot:
-    ax.scatter(x, y, label="kallisto", color=kallisto_color, s=markersize)
+    ax.scatter(x, y, label="alevin_transcriptome", color=kallisto_color, s=markersize)
     ax.scatter(xx, yy, label="alevin", color=alevin_color, s=markersize)
     ax.set_aspect(1.)
 
@@ -146,7 +146,7 @@ def make_scatter_hist(dist_AA, dist_BB, dist_AB, dist_BA, ax=None):
     ax.set_xlim(lims)
     ax.set_ylim(lims)
 
-    ax.set_xlabel("$\ell_1$ to nearest kallisto", fontsize=fsize)
+    ax.set_xlabel("$\ell_1$ to nearest alevin_transcriptome", fontsize=fsize)
     ax.set_ylabel("$\ell_1$ to nearest alevin", fontsize=fsize)
     axHistx.set_ylabel("Barcode counts", fontsize=fsize-8)
     axHisty.set_xlabel("Barcode counts", fontsize=fsize-8)
@@ -397,7 +397,7 @@ def main(ds, indir, outdir):
     
     minkb = min(x)
 
-    ax.plot(x, y, color=kallisto_color, label="kallisto", linewidth=linewidth)
+    ax.plot(x, y, color=kallisto_color, label="alevin_transcriptome", linewidth=linewidth)
 
     # ## Alevin
     x = np.sort(nd(alevin_common_cr.X.sum(axis=1)))[::-1]
@@ -416,7 +416,7 @@ def main(ds, indir, outdir):
         'xlim': (1, xmax),
         'ylim': 1,
         'yscale': 'log',
-        'xlabel': "kallisto UMI counts",
+        'xlabel': "alevin_transcriptome UMI counts",
         'ylabel': "Cumulative number of barcodes"
      })
 
@@ -454,7 +454,7 @@ def main(ds, indir, outdir):
         "xlim": (1, xmax),
          'xscale': 'log',
          'yscale': 'log',
-        'xlabel': 'kallisto UMI counts',
+        'xlabel': 'alevin_transcriptome UMI counts',
         'ylabel': 'alevin UMI counts'
     })
     yex(ax)
@@ -476,7 +476,7 @@ def main(ds, indir, outdir):
 
     xx = x[cutoff_mask]
     yy = y[cutoff_mask]
-    ax.scatter(xx,yy, alpha =0.05, s=markersize, label='kallisto', color=kallisto_color)
+    ax.scatter(xx,yy, alpha =0.05, s=markersize, label='alevin_transcriptome', color=kallisto_color)
 
     xx = x[~cutoff_mask]
     yy = y[~cutoff_mask]
@@ -504,7 +504,7 @@ def main(ds, indir, outdir):
         'ylabel': 'Genes detected'
     })
 
-    A_patch = mpatches.Patch(color=kallisto_color, label="kallisto")
+    A_patch = mpatches.Patch(color=kallisto_color, label="alevin_transcriptome")
     B_patch = mpatches.Patch(color=alevin_color, label="alevin")
     ax.legend(handles=[A_patch, B_patch], loc="lower right")
 
@@ -537,7 +537,7 @@ def main(ds, indir, outdir):
         'xscale': 'log',
         "xlim": (1, xmax),
         'ylim': (0,1),
-        'xlabel': 'kallisto UMI counts',
+        'xlabel': 'alevin_transcriptome UMI counts',
         'ylabel': 'Pearson Correlation'
     })
 
@@ -567,11 +567,11 @@ def main(ds, indir, outdir):
     cnts = nd(kb_common_cr.obs['counts'].values)
     ax.scatter(cnts, dist_AB, color=alevin_color, alpha=alpha, label="alevin", s=markersize)
     
-    ax.scatter(cnts, dist_AA, color=kallisto_color, alpha=alpha, label="kallisto", s=markersize)
+    ax.scatter(cnts, dist_AA, color=kallisto_color, alpha=alpha, label="alevin_transcriptome", s=markersize)
 
 
     ax.set(**{
-        "xlabel": "kallisto UMI counts",
+        "xlabel": "alevin_transcriptome UMI counts",
         "ylabel": "$\ell_1$ distance",
         'xscale': 'log',
         'yscale': 'log',
@@ -594,7 +594,7 @@ def main(ds, indir, outdir):
 
     title = "F.1"
 
-    label = "kallisto"
+    label = "alevin_transcriptome"
     color = kallisto_color
     x = kb_common_cr.obsm['TSNE'][:,0]
     y = kb_common_cr.obsm['TSNE'][:,1]
@@ -656,7 +656,7 @@ def main(ds, indir, outdir):
 
     ax.set_title(title, fontweight='bold', loc = 'left' )
 
-    A_patch = mpatches.Patch(color=kallisto_color, label="kallisto")
+    A_patch = mpatches.Patch(color=kallisto_color, label="alevin_transcriptome")
     B_patch = mpatches.Patch(color=alevin_color, label="alevin")
     same = mpatches.Patch(color='white', label='log$_2$(FC)$\leq$ 0.25 ({:.3f})'.format(M_AB[M_AB<=0.25].shape[0]/M_AB.shape[0]))
     ax.arrow(0, 1, 0, 1.5, length_includes_head=True, width=.05, color=kallisto_color)
@@ -667,7 +667,16 @@ def main(ds, indir, outdir):
     ax = ax_g_right
 
     title = "G.2"
-    QQ_plot(f"../../data/gsea_qq/{dataset_name}.csv", ax)
+    try:
+        QQ_plot(f"../../data/DE_saf_saf-decoy/gsea_qq/{dataset_name}.csv", ax)
+    except:
+        ax.text(0.5*(1), 0.5*(1), 'Matrices too similar ',
+            horizontalalignment='center',
+            verticalalignment='center',
+            fontsize=20, color='black',
+            transform=ax.transAxes)
+        ax.axis('off')
+    
     ax.set_title(title, fontweight='bold', loc='left')
 
     ################################################################################ GSEA Plot
@@ -688,7 +697,15 @@ def main(ds, indir, outdir):
     species = "_".join(REF_map.get(species).split(" "))
 
     title = "H"
-    DE_plot(f"../../data/gsea_bar/{ds}.csv", f"../../reference/GO/go_def{species}.csv", ax)
+    try:
+        DE_plot(f"../../data/DE_saf_saf-decoy/gsea_bar/{ds}.csv", f"../../reference/GO/go_def{species}.csv", ax)
+    except:
+        ax.text(0.5*(1), 0.5*(1), 'Matrices too similar ',
+            horizontalalignment='center',
+            verticalalignment='center',
+            fontsize=20, color='black',
+            transform=ax.transAxes)
+        ax.axis('off')
 
     ax.set_title(title, fontweight='bold', loc='left')
 
